@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Création des 3 serveurs qui va héberger nos clusters
+# Servers
 ###################################################################
 bash ./scripts/create-servers.sh
 
-# Initialisation du cluster Swarm
+# Swarm
 ######################################################################""
 bash ./scripts/initialize-swarm.sh
 
-# Création du réseau
+# Network
 ######################################################################""
 bash ./scripts/create-network.sh
+
+eval "$(docker-machine env leader1)"
