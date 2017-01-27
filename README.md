@@ -1,2 +1,7 @@
 # docker-orchestration-starter
-Projet permettant de construire une base de travail sur différentes solutions (Swarm, Mesos, Kubernetes). test
+Starter/helper project for initialize a containers orchestration with multiple solutions (Swarm, Mesos, Kubernetes).
+
+## Docker Swarm
+
+* Launch a Swarm Cluster (1 leader and 2 workers) : [here](https://github.com/so-technology-watch/docker-orchestration-starter/swarm-starter)
+
