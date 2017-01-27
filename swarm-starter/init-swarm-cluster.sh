@@ -11,7 +11,3 @@ bash ./scripts/initialize-swarm.sh
 # Création du réseau
 ######################################################################""
 bash ./scripts/create-network.sh
-
-# Ajout de l'ihm de visualisation du cluster Swarm
-######################################################################""
-bash ./scripts/add-visualizer.sh
