@@ -62,3 +62,8 @@ docker service scale helloworld=10
 docker service list # see the REPLICATS column
 docker service ps helloworld # Never a instance are deployed on the leader1 server
 ```
+
+## Delete the service
+```bash
+docker service rm helloworld
+```
