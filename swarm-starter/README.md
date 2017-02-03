@@ -73,6 +73,6 @@ docker service rm helloworld
 > **Note :** If you are on Windows, connect to ssh on the `leader1` before launch the following command. To connect to ssh type `docker-machine ssh leader1`
 
 ```bash
-docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock  julienbreux/docker-swarm-gui:latest
+docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped  julienbreux/docker-swarm-gui:latest
 ```
 See on : http://{leader1 ip}:5000/ the result
