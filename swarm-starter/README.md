@@ -3,7 +3,7 @@
 > **Objectif :** Create and run 3 servers (leader, worker1 and worker2) configured and declared on a swarm cluster
 
 ## Prerequisites
-1. Docker ecosystem tools (1.12 or later)
+1. Docker ecosystem tools (1.13 or later)
   * docker engine
   * docker machine
 2. VirtualBox
