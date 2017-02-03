@@ -12,4 +12,6 @@ bash ./scripts/initialize-swarm.sh
 ######################################################################""
 bash ./scripts/create-network.sh
 
+echo 'Connect the docker client to the leader1 server'
 eval "$(docker-machine env leader1)"
+
