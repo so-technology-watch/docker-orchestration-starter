@@ -1,51 +1,60 @@
 #!/bin/bash
 
-if [ "$OSTYPE" == "msys" ]; then
-    # Use of ssh to launch command. Too compatibility problems with the docker client subCommandForWindows
-    echo 'Windows detected'
-    passBySSHForWindows_leader='docker-machine ssh leader1'
-    passBySSHForWindows_worker1='docker-machine ssh worker1'
-    passBySSHForWindows_worker2='docker-machine ssh worker2'
-else
-    eval "$(docker-machine env leader1)"
-fi
-
-echo '######################################################################'
 echo 'Init Swarm on the leader1 server'
-echo '######################################################################'
+echo '################################'
 ip_leader1=$(docker-machine ip leader1)
+echo 'leader1 IP : $ip_leader1'
 
-$passBySSHForWindows_leader docker swarm init \
-    --listen-addr $ip_leader1 \
-    --advertise-addr $ip_leader1
-
-echo '######################################################################'
-echo 'Join worker1 and worker2 on the Swarm'
-echo '######################################################################'
+initSwarmCommand="docker swarm init --listen-addr $ip_leader1 --advertise-addr $ip_leader1"
 if [ "$OSTYPE" == "msys" ]; then
-    # Use of ssh to launch command. Too compatibility problems with the docker client subCommandForWindows
-    echo 'get token leader : Windows detected'
-    token=$(docker-machine ssh leader1 docker swarm join-token worker -q)
+    # Pass by ssh. Too compatibility problems with the docker client on Windows (volumes, warning messages ...)
+    echo '!! Windows detected !! -> Execute command by ssh'
+    docker-machine ssh leader1 $initSwarmCommand
 else
-    token=$(docker swarm join-token worker -q)
+    # Launch command with the docker client connected to the leader1 server
+    eval "$(docker-machine env leader1)"
+    $initSwarmCommand
 fi
 
-eval "$(docker-machine env worker1)"
+echo 'Join worker1 and worker2 on the Swarm'
+echo '#####################################'
+getLeaderTokenCommand="docker swarm join-token worker -q"
 
-$passBySSHForWindows_worker1 docker swarm join --token $token $ip_leader1:2377
+if [ "$OSTYPE" == "msys" ]; then
+    # Pass by ssh. Too compatibility problems with the docker client on Windows (volumes, warning messages ...)
+    echo '!! Windows detected !! -> Execute command by ssh'
+    token=$(docker-machine ssh leader1 $getLeaderTokenCommand)
+else
+    token=$($getLeaderTokenCommand)
+fi
 
-eval "$(docker-machine env worker2)"
+addWorkerCommand="docker swarm join --token $token $ip_leader1:2377"
 
-$passBySSHForWindows_worker2 docker swarm join --token $token $ip_leader1:2377
+if [ "$OSTYPE" == "msys" ]; then
+    # Pass by ssh. Too compatibility problems with the docker client on Windows (volumes, warning messages ...)
+    echo '!! Windows detected !! -> Execute command by ssh'
+    echo 'Connect the worker1 server'
+    docker-machine ssh worker1 $addWorkerCommand
+    echo 'Connect the worker2 server'
+    docker-machine ssh worker2 $addWorkerCommand
+else
+    echo 'Connect the worker1 server'
+    eval "$(docker-machine env worker1)"    
+    $addWorkerCommand
+    echo 'Connect the worker2 server'
+    eval "$(docker-machine env worker2)"
+    $addWorkerCommand
+fi
 
-echo '######################'
+
 echo 'Add visualization tool'
 echo '######################'
-
+runVisualizationToolCommand="docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped  julienbreux/docker-swarm-gui:latest"
 if [ "$OSTYPE" == "msys" ]; then
-    # Use of ssh to launch command. Too compatibility problems with the docker client subCommandForWindows
-    $passBySSHForWindows_leader "docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped  julienbreux/docker-swarm-gui:latest"
+    # Pass by ssh. Too compatibility problems with the docker client on Windows (volumes, warning messages ...)
+    echo '!! Windows detected !! -> Execute command by ssh'
+    docker-machine ssh leader1 $runVisualizationToolCommand
 else
     eval "$(docker-machine env leader1)"
-    docker run -it -d -p 5000:8080 -v /var/run/docker.sock:/var/run/docker.sock --restart=unless-stopped  julienbreux/docker-swarm-gui:latest
+    $runVisualizationToolCommand
 fi
