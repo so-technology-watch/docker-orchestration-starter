@@ -9,6 +9,9 @@ bash ./scripts/initialize-swarm.sh
 # Network
 bash ./scripts/create-network.sh
 
+# Add Swarm GUI (helper tool)
+bash ./scripts/add-swarm-gui.sh
+
 eval "$(docker-machine env leader1)"
 
 leaderIp=$(docker-machine ip leader1)

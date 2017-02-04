@@ -1,7 +1,7 @@
 #!/bin/bash
 
-leaderIp=$(docker-machine ip leader1)
-
-tput bold; tput setaf 2; echo "To see your swarm, go to : http://$leaderIp:5000/"
-tput sgr0
-echo "Done !"
+test="chaine de carateres"
+echo "test 1 :"
+echo $test
+echo "test 2 : "
+echo \"$test\"
