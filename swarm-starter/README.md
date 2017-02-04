@@ -1,5 +1,7 @@
 # Starter to launch a Swarm cluster
 
+![badge](https://img.shields.io/badge/Ready%20to%20use%20%3F%20-In%20progress-red.svg)
+
 > **Objectif :** Create and run 3 servers (leader, worker1 and worker2) configured and declared on a swarm cluster
 
 ## Prerequisites
